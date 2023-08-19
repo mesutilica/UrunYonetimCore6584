@@ -1,0 +1,16 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
+    @foreach (var item in Model.Products)
+    {
+        <div class="col">
+            <img src="/Img/Products/@item.Image" alt="" class="img-fluid" />
+        </div>
+    }
+</div>

@@ -15,7 +15,7 @@ builder.Services.AddTransient(typeof(IService<>), typeof(Service<>)); // veritab
 
 //builder.Services.AddTransient<IProductService, ProductService>(); // 1. yazým türü
 builder.Services.AddTransient(typeof(IProductService), typeof(ProductService)); // 2. yazým türü. ürün yönetimi için yaptýðýmýz özel servisi ekledik, bunu eklemezsek uygulama hata verir!
-
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 // Uygulamaya Servis eklemede 3 farklý yöntem var
 /*
  * builder.Services.AddTransient : Bu yöntem eðer kullanýmda nesne varsa onu kullanýr yoksa yeni nesne oluþturur.

@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model HomePageViewModel
+
+@{
+    ViewData["Title"] = "Anasayfa";
 }
 
+@section scripts{
+    <script>
+        $(".carousel-inner .carousel-item:first").addClass("active")
+    </script>
+}
+
+@await Component.InvokeAsync("Slides")
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Ürünlerimiz</h1>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3">
+    @foreach (var item in Model.Products)
+    {
+        <div class="col">
+            <img src="/Img/Products/@item.Image" alt="" class="img-fluid" />
+        </div>
+    }
+</div>
+
+<div class="text-center">
+    <h1 class="display-4">Markalarımız</h1>
+</div>
+
+<div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4">
+    @foreach (var item in Model.Brands.Take(4))
+    {
+        <div class="col">
+            <img src="/Img/Brands/@item.Logo" alt="" class="img-fluid" />
+        </div>
+    }
 </div>
