@@ -42,10 +42,16 @@
                         </li>
                     </ul>
                 </div>
+                <a class="btn btn-danger" asp-area="Admin" asp-controller="Login" asp-action="Logout">Oturumu Kapat</a>
             </div>
         </nav>
     </header>
     <div class="container">
+        <div class="row">
+            <div class="col">
+                @Html.Raw(TempData["Message"])
+            </div>
+        </div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
