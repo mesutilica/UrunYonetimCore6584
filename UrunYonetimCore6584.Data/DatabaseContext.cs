@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using UrunYonetimCore6584.Core.Entities;
-using UrunYonetimCore6584.Data.Configurations;
 
 namespace UrunYonetimCore6584.Data
 {

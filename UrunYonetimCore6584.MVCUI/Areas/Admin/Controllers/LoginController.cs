@@ -43,7 +43,7 @@ namespace UrunYonetimCore6584.MVCUI.Areas.Admin.Controllers
                     new Claim("UserId", account.Id.ToString())
                 };
                 var userIdentity = new ClaimsIdentity(claims, "Login");
-                ClaimsPrincipal userPrincipal = new (userIdentity);
+                ClaimsPrincipal userPrincipal = new(userIdentity);
                 await HttpContext.SignInAsync(userPrincipal);
                 return Redirect("/Admin");
             }

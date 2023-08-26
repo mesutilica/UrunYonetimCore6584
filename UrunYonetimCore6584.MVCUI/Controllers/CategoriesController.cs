@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.MVCUI.Controllers

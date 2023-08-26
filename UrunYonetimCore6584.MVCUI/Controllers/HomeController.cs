@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.MVCUI.Models;
-using UrunYonetimCore6584.MVCUI.Utils;
 using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.MVCUI.Controllers

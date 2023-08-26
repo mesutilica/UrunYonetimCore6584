@@ -1,6 +1,6 @@
-﻿using UrunYonetimCore6584.Core.Entities;
-using System.Net; // mail için kütüphane
+﻿using System.Net; // mail için kütüphane
 using System.Net.Mail;
+using UrunYonetimCore6584.Core.Entities;
 
 namespace UrunYonetimCore6584.MVCUI.Utils
 {

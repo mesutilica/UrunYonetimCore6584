@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrunYonetimCore6584.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrunYonetimCore6584.Data", "UrunYonetimCore6584.Data\UrunYonetimCore6584.Data.csproj", "{226873E9-802A-41C4-AF2D-C17ECFEDEB5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrunYonetimCore6584.Service", "UrunYonetimCore6584.Service\UrunYonetimCore6584.Service.csproj", "{6F6B6906-58F8-451E-809D-2C283C45C4B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrunYonetimCore6584.Service", "UrunYonetimCore6584.Service\UrunYonetimCore6584.Service.csproj", "{6F6B6906-58F8-451E-809D-2C283C45C4B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrunYonetimCore6584.WebAPI", "UrunYonetimCore6584.WebAPI\UrunYonetimCore6584.WebAPI.csproj", "{B18514B9-C768-43D4-8371-88AF3C30501A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6F6B6906-58F8-451E-809D-2C283C45C4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F6B6906-58F8-451E-809D-2C283C45C4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F6B6906-58F8-451E-809D-2C283C45C4B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B18514B9-C768-43D4-8371-88AF3C30501A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B18514B9-C768-43D4-8371-88AF3C30501A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B18514B9-C768-43D4-8371-88AF3C30501A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B18514B9-C768-43D4-8371-88AF3C30501A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

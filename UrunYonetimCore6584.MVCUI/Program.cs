@@ -1,8 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies; // oturum açma için gerekli kütüphane
+using System.Security.Claims; // oturum için 
 using UrunYonetimCore6584.Data;
 using UrunYonetimCore6584.Service.Abstract;
 using UrunYonetimCore6584.Service.Concrete;
-using Microsoft.AspNetCore.Authentication.Cookies; // oturum açma için gerekli kütüphane
-using System.Security.Claims; // oturum için 
 
 var builder = WebApplication.CreateBuilder(args);
 
