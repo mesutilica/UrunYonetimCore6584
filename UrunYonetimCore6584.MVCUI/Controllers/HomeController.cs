@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.MVCUI.Models;
+using UrunYonetimCore6584.MVCUI.Utils;
 using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.MVCUI.Controllers
@@ -11,11 +12,13 @@ namespace UrunYonetimCore6584.MVCUI.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IProductService _service;
         private readonly IService<Brand> _serviceBrand;
-        public HomeController(ILogger<HomeController> logger, IProductService service, IService<Brand> serviceBrand)
+        private readonly IService<Contact> _serviceContact;
+        public HomeController(ILogger<HomeController> logger, IProductService service, IService<Brand> serviceBrand, IService<Contact> serviceContact)
         {
             _logger = logger;
             _service = service;
             _serviceBrand = serviceBrand;
+            _serviceContact = serviceContact;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -29,9 +32,32 @@ namespace UrunYonetimCore6584.MVCUI.Controllers
             return View(model);
         }
 
-        public IActionResult Privacy()
+        public IActionResult ContactUs()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ContactUsAsync(Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _serviceContact.AddAsync(contact);
+                    await _serviceContact.SaveAsync();
+                    // await MailHelper.SendMailAsync(contact);
+                    TempData["Message"] = @"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
+  <strong>Mesajınız Gönderilmiştir.!</strong>  Teşekkür Ederiz..
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+</div>";
+                    return RedirectToAction("ContactUs");
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Hata Oluştu!");
+                }
+            }
+            return View(contact);
         }
         [Route("/AccessDenied")]
         public IActionResult AccessDenied()

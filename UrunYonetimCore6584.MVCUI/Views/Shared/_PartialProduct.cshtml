@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Product>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 text-center">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-6 col-md-4 col-lg-4">
+            <div class="box">
+                <div class="option_container">
+                    <div class="options">
+                        <a href="" class="option1">
+                            Sepete Ekle
+                        </a>
+                        <a href="/Products/Detail/@item.Id" class="option2">
+                            İncele
+                        </a>
+                    </div>
+                </div>
+                <div class="img-box">
+                    <img src="/Img/Products/@item.Image" alt="">
+                </div>
+                <div class="detail-box">
+                    <h5>
+                        @item.Name
+                    </h5>
+                    <h6>
+                        @item.Price ₺
+                    </h6>
+                </div>
+            </div>
+        </div>
+    }
+</div>
