@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.Data;
+using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.WebAPI.Controllers
 {
@@ -9,9 +10,9 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
     [ApiController]
     public class SlidesController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IService<Slide> _context;
 
-        public SlidesController(DatabaseContext context)
+        public SlidesController(IService<Slide> context)
         {
             _context = context;
         }
@@ -20,22 +21,14 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Slide>>> GetSlides()
         {
-            if (_context.Slides == null)
-            {
-                return NotFound();
-            }
-            return await _context.Slides.ToListAsync();
+            return await _context.GetAllAsync();
         }
 
         // GET: api/Slides/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Slide>> GetSlide(int id)
         {
-            if (_context.Slides == null)
-            {
-                return NotFound();
-            }
-            var slide = await _context.Slides.FindAsync(id);
+            var slide = await _context.FindAsync(id);
 
             if (slide == null)
             {
@@ -55,22 +48,15 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(slide).State = EntityState.Modified;
+            _context.Update(slide);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SlideExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem();
             }
 
             return NoContent();
@@ -81,12 +67,8 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Slide>> PostSlide(Slide slide)
         {
-            if (_context.Slides == null)
-            {
-                return Problem("Entity set 'DatabaseContext.Slides'  is null.");
-            }
-            _context.Slides.Add(slide);
-            await _context.SaveChangesAsync();
+            await _context.AddAsync(slide);
+            await _context.SaveAsync();
 
             return CreatedAtAction("GetSlide", new { id = slide.Id }, slide);
         }
@@ -95,25 +77,16 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSlide(int id)
         {
-            if (_context.Slides == null)
-            {
-                return NotFound();
-            }
-            var slide = await _context.Slides.FindAsync(id);
+            var slide = await _context.FindAsync(id);
             if (slide == null)
             {
                 return NotFound();
             }
 
-            _context.Slides.Remove(slide);
-            await _context.SaveChangesAsync();
+            _context.Delete(slide);
+            await _context.SaveAsync();
 
             return NoContent();
-        }
-
-        private bool SlideExists(int id)
-        {
-            return (_context.Slides?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

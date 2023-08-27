@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.Data;
+using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.WebAPI.Controllers
 {
@@ -9,33 +10,25 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
     [ApiController]
     public class BrandsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IService<Brand> _service;
 
-        public BrandsController(DatabaseContext context)
+        public BrandsController(IService<Brand> service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Brands
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Brand>>> GetBrands()
         {
-            if (_context.Brands == null)
-            {
-                return NotFound();
-            }
-            return await _context.Brands.ToListAsync();
+            return await _service.GetAllAsync();
         }
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Brand>> GetBrand(int id)
         {
-            if (_context.Brands == null)
-            {
-                return NotFound();
-            }
-            var brand = await _context.Brands.FindAsync(id);
+            var brand = await _service.FindAsync(id);
 
             if (brand == null)
             {
@@ -55,22 +48,15 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(brand).State = EntityState.Modified;
+            _service.Update(brand);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _service.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BrandExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem();
             }
 
             return NoContent();
@@ -81,12 +67,8 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Brand>> PostBrand(Brand brand)
         {
-            if (_context.Brands == null)
-            {
-                return Problem("Entity set 'DatabaseContext.Brands'  is null.");
-            }
-            _context.Brands.Add(brand);
-            await _context.SaveChangesAsync();
+            await _service.AddAsync(brand);
+            await _service.SaveAsync();
 
             return CreatedAtAction("GetBrand", new { id = brand.Id }, brand);
         }
@@ -95,25 +77,18 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBrand(int id)
         {
-            if (_context.Brands == null)
-            {
-                return NotFound();
-            }
-            var brand = await _context.Brands.FindAsync(id);
+            
+            var brand = await _service.FindAsync(id);
             if (brand == null)
             {
                 return NotFound();
             }
 
-            _context.Brands.Remove(brand);
-            await _context.SaveChangesAsync();
+            _service.Delete(brand);
+            await _service.SaveAsync();
 
             return NoContent();
         }
 
-        private bool BrandExists(int id)
-        {
-            return (_context.Brands?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.Data;
+using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.WebAPI.Controllers
 {
@@ -9,9 +10,9 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IProductService _context;
 
-        public ProductsController(DatabaseContext context)
+        public ProductsController(IProductService context)
         {
             _context = context;
         }
@@ -20,22 +21,14 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            if (_context.Products == null)
-            {
-                return NotFound();
-            }
-            return await _context.Products.ToListAsync();
+            return await _context.GetAllProductsByIncludeAsync();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            if (_context.Products == null)
-            {
-                return NotFound();
-            }
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.FindAsync(id);
 
             if (product == null)
             {
@@ -55,22 +48,15 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            _context.Update(product);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem();
             }
 
             return NoContent();
@@ -81,12 +67,8 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            if (_context.Products == null)
-            {
-                return Problem("Entity set 'DatabaseContext.Products'  is null.");
-            }
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            _context.Add(product);
+            await _context.SaveAsync();
 
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
@@ -95,25 +77,17 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            if (_context.Products == null)
-            {
-                return NotFound();
-            }
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            _context.Delete(product);
+            await _context.SaveAsync();
 
             return NoContent();
         }
 
-        private bool ProductExists(int id)
-        {
-            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

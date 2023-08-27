@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.Data;
+using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.WebAPI.Controllers
 {
@@ -9,9 +10,9 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
     [ApiController]
     public class ContactsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IService<Contact> _context;
 
-        public ContactsController(DatabaseContext context)
+        public ContactsController(IService<Contact> context)
         {
             _context = context;
         }
@@ -20,22 +21,14 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
-            if (_context.Contacts == null)
-            {
-                return NotFound();
-            }
-            return await _context.Contacts.ToListAsync();
+            return await _context.GetAllAsync();
         }
 
         // GET: api/Contacts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Contact>> GetContact(int id)
         {
-            if (_context.Contacts == null)
-            {
-                return NotFound();
-            }
-            var contact = await _context.Contacts.FindAsync(id);
+            var contact = await _context.FindAsync(id);
 
             if (contact == null)
             {
@@ -55,22 +48,15 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(contact).State = EntityState.Modified;
+            _context.Update(contact);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ContactExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem();
             }
 
             return NoContent();
@@ -81,12 +67,8 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
-            if (_context.Contacts == null)
-            {
-                return Problem("Entity set 'DatabaseContext.Contacts'  is null.");
-            }
-            _context.Contacts.Add(contact);
-            await _context.SaveChangesAsync();
+            _context.Add(contact);
+            await _context.SaveAsync();
 
             return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
         }
@@ -95,25 +77,17 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(int id)
         {
-            if (_context.Contacts == null)
-            {
-                return NotFound();
-            }
-            var contact = await _context.Contacts.FindAsync(id);
+            var contact = await _context.FindAsync(id);
             if (contact == null)
             {
                 return NotFound();
             }
 
-            _context.Contacts.Remove(contact);
-            await _context.SaveChangesAsync();
+            _context.Delete(contact);
+            await _context.SaveAsync();
 
             return NoContent();
         }
 
-        private bool ContactExists(int id)
-        {
-            return (_context.Contacts?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

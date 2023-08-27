@@ -6,6 +6,7 @@ namespace UrunYonetimCore6584.MVCUI.ViewComponents
 {
     public class Slides : ViewComponent
     {
+
         private readonly IService<Slide> _service;
 
         public Slides(IService<Slide> service)

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UrunYonetimCore6584.Core.Entities;
 using UrunYonetimCore6584.Data;
+using UrunYonetimCore6584.Service.Abstract;
 
 namespace UrunYonetimCore6584.WebAPI.Controllers
 {
@@ -9,9 +10,9 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IService<Category> _context;
 
-        public CategoriesController(DatabaseContext context)
+        public CategoriesController(IService<Category> context)
         {
             _context = context;
         }
@@ -20,22 +21,14 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            if (_context.Categories == null)
-            {
-                return NotFound();
-            }
-            return await _context.Categories.ToListAsync();
+            return await _context.GetAllAsync();
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            if (_context.Categories == null)
-            {
-                return NotFound();
-            }
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.FindAsync(id);
 
             if (category == null)
             {
@@ -55,22 +48,15 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            _context.Update(category);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Problem();
             }
 
             return NoContent();
@@ -81,12 +67,8 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            if (_context.Categories == null)
-            {
-                return Problem("Entity set 'DatabaseContext.Categories'  is null.");
-            }
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            await _context.AddAsync(category);
+            await _context.SaveAsync();
 
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
@@ -95,25 +77,17 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            if (_context.Categories == null)
-            {
-                return NotFound();
-            }
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
 
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
+            _context.Delete(category);
+            await _context.SaveAsync();
 
             return NoContent();
         }
 
-        private bool CategoryExists(int id)
-        {
-            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

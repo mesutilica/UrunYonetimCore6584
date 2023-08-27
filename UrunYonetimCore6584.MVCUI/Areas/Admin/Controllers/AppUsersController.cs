@@ -47,8 +47,9 @@ namespace UrunYonetimCore6584.MVCUI.Areas.Admin.Controllers
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "Hata Oluştu!");
             }
+            return View();
         }
 
         // GET: AppUsersController/Edit/5

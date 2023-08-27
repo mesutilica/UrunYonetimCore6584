@@ -55,7 +55,7 @@ namespace UrunYonetimCore6584.WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                
+                return Problem();
             }
 
             return NoContent();

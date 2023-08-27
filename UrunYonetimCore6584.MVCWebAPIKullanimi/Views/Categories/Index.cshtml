@@ -1,0 +1,16 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="product_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>
+                @Model.Name <span>Ürünleri</span>
+            </h2>
+        </div>
+        <partial name="_PartialProduct" model="Model.Products" />
+    </div>
+</section>

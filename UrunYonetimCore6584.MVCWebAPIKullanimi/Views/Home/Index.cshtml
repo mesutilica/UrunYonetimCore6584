@@ -1,0 +1,39 @@
+﻿@model HomePageViewModel
+
+@{
+    ViewData["Title"] = "Anasayfa";
+}
+
+@section scripts{
+    <script>
+        $(".carousel-inner .carousel-item:first").addClass("active")
+    </script>
+}
+
+@await Component.InvokeAsync("Slides")
+
+<section class="product_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>
+                Popüler <span>Ürünlerimiz</span>
+            </h2>
+        </div>
+        <partial name="_PartialProduct" model="Model.Products" />
+    </div>
+</section>
+
+<div class="text-center">
+    <h1 class="display-4">Markalarımız</h1>
+</div>
+
+<div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 align-items-center">
+    @foreach (var item in Model.Brands.Take(4))
+    {
+        <div class="col">
+            <a href="/Brand/Index/@item.Id">
+                <img src="/Img/Brands/@item.Logo" alt="@item.Name" title="@item.Name" class="img-fluid" />
+            </a>
+        </div>
+    }
+</div>

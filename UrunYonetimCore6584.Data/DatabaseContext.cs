@@ -15,6 +15,19 @@ namespace UrunYonetimCore6584.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"server=.; database=UrunYonetimCore6584; trusted_connection=true; TrustServerCertificate=True");
+            // optionsBuilder.UseSqlServer(@"server=mssql.siteadi.com; database=UrunYonetimCore6584; username=dbkullaniciadi; password=DbSifre; TrustServerCertificate=True"); // Canlı sunucuya bağlanırken
+            /*
+             * Uygulama çıktısı alma;
+             * Mvc projesini başlangıç projesi yap
+             * Mvc projesine sağ tık > Publish
+             * Önce klasörü seçerek profil oluşturduk
+             * Publish butonuna basarak çıktı aldık
+             * Çıktıdan sonra sunucuya atılacak dosyalar
+             * runtimes klasörü
+             * 2 karakterli dil paketleri atılsa da atılmasada olur
+             * wwwroot klasörünü sunucuya yüklüyoruz
+             * klasörleri altındaki tüm dll dosyalarını ftp ile sunucuya yüklüyoruz.
+             * */
             base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
